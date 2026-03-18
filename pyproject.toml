@@ -1,0 +1,25 @@
+[project]
+name = "harrington-automation-station"
+version = "1.0.0"
+description = "Z-scan knife-edge beam profiler with selectable automation levels"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Joey Harrington" },
+]
+dependencies = [
+    "streamlit>=1.30.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "plotly>=5.18.0",
+    "pandas>=2.0.0",
+    "pythonnet>=3.0.0",
+    "pywin32>=306",
+]
+
+[project.scripts]
+profiler-cli = "knife_edge_zscan:main"
+
+[tool.uv]
+dev-dependencies = []
