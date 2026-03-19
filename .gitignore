@@ -1,9 +1,40 @@
-
-# Build artifacts
-src/*.egg-info/
-
-# Data cache
-data/cache/
-
 # Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# uv
+uv.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Data caches (tracked config stays)
+data/cache/
+data/results/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
