@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "harrington-automation-station"
 version = "1.0.0"
-description = "Z-scan knife-edge beam profiler with selectable automation levels"
+description = "Lab automation platform: beam profiling, hardware control, and data analysis"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
@@ -14,12 +18,25 @@ dependencies = [
     "matplotlib>=3.7.0",
     "plotly>=5.18.0",
     "pandas>=2.0.0",
-    "pythonnet>=3.0.0",
-    "pywin32>=306",
 ]
 
-[project.scripts]
-profiler-cli = "knife_edge_zscan:main"
+[project.optional-dependencies]
+hardware = [
+    "pythonnet>=3.0.0",
+    "pywin32>=306",
+    "pyserial>=3.5",
+]
+ai = [
+    "anthropic>=0.40.0",
+    "openai>=1.60.0",
+]
+dev = ["pytest", "ruff"]
 
-[tool.uv]
-dev-dependencies = []
+[project.scripts]
+profiler-cli = "automation_station.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]

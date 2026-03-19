@@ -1,0 +1,9 @@
+
+# Build artifacts
+src/*.egg-info/
+
+# Data cache
+data/cache/
+
+# Python
+__pycache__/
