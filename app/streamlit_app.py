@@ -44,40 +44,40 @@ with hw_panel():
     st.subheader("Scan Modes")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("### \U0001f916 Full Auto")
+        st.markdown("### Full Auto")
         st.caption(
             "Automated knife-edge scan with stage control and power meter reading. "
             "Set parameters and let the system run."
         )
-        st.page_link("pages/1_Full_Auto.py", label="Launch Full Auto", icon="\u25b6\ufe0f")
+        st.page_link("pages/1_Full_Auto.py", label="Launch Full Auto")
     with col2:
-        st.markdown("### \U0001f579\ufe0f Semi Auto")
+        st.markdown("### Semi Auto")
         st.caption(
             "Step-by-step guided scan. You control the stage manually; "
             "the app reads and records power at each position."
         )
-        st.page_link("pages/2_Semi_Auto.py", label="Launch Semi Auto", icon="\u25b6\ufe0f")
+        st.page_link("pages/2_Semi_Auto.py", label="Launch Semi Auto")
     with col3:
-        st.markdown("### \u270d\ufe0f Minimal")
+        st.markdown("### Minimal")
         st.caption(
             "Manual data entry mode. Paste or type position/power data "
             "and run the beam profile analysis."
         )
-        st.page_link("pages/3_Minimal.py", label="Launch Minimal", icon="\u25b6\ufe0f")
+        st.page_link("pages/3_Minimal.py", label="Launch Minimal")
 
 # ── Quick Links ──────────────────────────────────────────────────
 with hw_panel():
     st.subheader("Quick Links")
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.page_link("pages/4_Results.py", label="\U0001f4ca Results", icon="\U0001f4ca")
+        st.page_link("pages/4_Results.py", label="Results")
     with col2:
-        st.page_link("pages/5_Settings.py", label="\u2699\ufe0f Settings", icon="\u2699\ufe0f")
+        st.page_link("pages/5_Settings.py", label="Settings")
     with col3:
-        st.page_link("pages/6_Gnuplot.py", label="\U0001f4c8 Gnuplot", icon="\U0001f4c8")
+        st.page_link("pages/6_Gnuplot.py", label="Gnuplot")
     with col4:
         if is_admin():
-            st.page_link("pages/7_Admin.py", label="\U0001f512 Admin", icon="\U0001f512")
+            st.page_link("pages/7_Admin.py", label="Admin")
         else:
             st.caption("\U0001f512 Admin (login required)")
 
