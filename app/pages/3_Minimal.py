@@ -6,7 +6,6 @@ Z stage automated only. User types knife-edge position and power readings.
 import streamlit as st
 import numpy as np
 
-st.set_page_config(page_title="Minimal Scan", page_icon="📝", layout="wide")
 
 st.markdown("""
 <style>

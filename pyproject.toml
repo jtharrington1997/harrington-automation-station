@@ -18,6 +18,7 @@ dependencies = [
     "matplotlib>=3.7.0",
     "plotly>=5.18.0",
     "pandas>=2.0.0",
+    "harrington-common",
 ]
 
 [project.optional-dependencies]
@@ -37,6 +38,9 @@ profiler-cli = "automation_station.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.uv.sources]
+harrington-common = { path = "../harrington-common", editable = true }
 
 [dependency-groups]
 dev = ["pytest", "ruff"]

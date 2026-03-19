@@ -11,7 +11,6 @@ import tempfile
 import os
 import shutil
 
-st.set_page_config(page_title="Gnuplot", page_icon="📈", layout="wide")
 
 st.markdown("""
 <style>

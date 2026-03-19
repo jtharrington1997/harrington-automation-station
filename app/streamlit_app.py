@@ -10,7 +10,6 @@ from automation_station.io.config import load_config
 
 st.set_page_config(
     page_title="Automation Station",
-    page_icon="\U0001f52c",
     layout="wide",
     initial_sidebar_state="expanded",
 )

@@ -82,6 +82,68 @@ wheels = [
 ]
 
 [[package]]
+name = "automation-station"
+version = "1.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "harrington-common" },
+    { name = "matplotlib" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pandas" },
+    { name = "plotly" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "streamlit" },
+]
+
+[package.optional-dependencies]
+ai = [
+    { name = "anthropic" },
+    { name = "openai" },
+]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+hardware = [
+    { name = "pyserial" },
+    { name = "pythonnet" },
+    { name = "pywin32" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.40.0" },
+    { name = "harrington-common", editable = "../harrington-common" },
+    { name = "matplotlib", specifier = ">=3.7.0" },
+    { name = "numpy", specifier = ">=1.24.0" },
+    { name = "openai", marker = "extra == 'ai'", specifier = ">=1.60.0" },
+    { name = "pandas", specifier = ">=2.0.0" },
+    { name = "plotly", specifier = ">=5.18.0" },
+    { name = "pyserial", marker = "extra == 'hardware'", specifier = ">=3.5" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pythonnet", marker = "extra == 'hardware'", specifier = ">=3.0.0" },
+    { name = "pywin32", marker = "extra == 'hardware'", specifier = ">=306" },
+    { name = "ruff", marker = "extra == 'dev'" },
+    { name = "scipy", specifier = ">=1.10.0" },
+    { name = "streamlit", specifier = ">=1.30.0" },
+]
+provides-extras = ["hardware", "ai", "dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[[package]]
 name = "blinker"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -621,64 +683,18 @@ wheels = [
 ]
 
 [[package]]
-name = "harrington-automation-station"
-version = "1.0.0"
-source = { editable = "." }
+name = "harrington-common"
+version = "0.1.0"
+source = { editable = "../harrington-common" }
 dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.4.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pandas" },
-    { name = "plotly" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "streamlit" },
 ]
 
-[package.optional-dependencies]
-ai = [
-    { name = "anthropic" },
-    { name = "openai" },
-]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
-hardware = [
-    { name = "pyserial" },
-    { name = "pythonnet" },
-    { name = "pywin32" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
-
 [package.metadata]
-requires-dist = [
-    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.40.0" },
-    { name = "matplotlib", specifier = ">=3.7.0" },
-    { name = "numpy", specifier = ">=1.24.0" },
-    { name = "openai", marker = "extra == 'ai'", specifier = ">=1.60.0" },
-    { name = "pandas", specifier = ">=2.0.0" },
-    { name = "plotly", specifier = ">=5.18.0" },
-    { name = "pyserial", marker = "extra == 'hardware'", specifier = ">=3.5" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pythonnet", marker = "extra == 'hardware'", specifier = ">=3.0.0" },
-    { name = "pywin32", marker = "extra == 'hardware'", specifier = ">=306" },
-    { name = "ruff", marker = "extra == 'dev'" },
-    { name = "scipy", specifier = ">=1.10.0" },
-    { name = "streamlit", specifier = ">=1.30.0" },
-]
-provides-extras = ["hardware", "ai", "dev"]
+requires-dist = [{ name = "streamlit", specifier = ">=1.30.0" }]
 
 [package.metadata.requires-dev]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
+dev = []
 
 [[package]]
 name = "httpcore"

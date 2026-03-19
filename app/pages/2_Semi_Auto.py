@@ -11,7 +11,6 @@ import csv
 from datetime import datetime
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="Semi Auto Scan", page_icon="🔧", layout="wide")
 
 # ── Shared CSS ────────────────────────────────────────────────────────────────
 st.markdown("""

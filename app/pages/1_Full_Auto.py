@@ -8,7 +8,6 @@ import numpy as np
 import time
 from datetime import datetime
 
-st.set_page_config(page_title="Full Auto Scan", page_icon="🤖", layout="wide")
 
 st.markdown("""
 <style>

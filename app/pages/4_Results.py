@@ -10,7 +10,6 @@ import io
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-st.set_page_config(page_title="Results & Analysis", page_icon="📊", layout="wide")
 
 st.markdown("""
 <style>
