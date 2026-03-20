@@ -735,7 +735,10 @@ dependencies = [
 requires-dist = [{ name = "streamlit", specifier = ">=1.30.0" }]
 
 [package.metadata.requires-dev]
-dev = []
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
 
 [[package]]
 name = "httpcore"
