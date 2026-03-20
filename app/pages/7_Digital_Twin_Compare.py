@@ -222,7 +222,7 @@ if experimental_data:
                     yaxis_title="Normalized Intensity",
                     height=400, **plot_defaults(),
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
             elif "wavelength_nm" in df.columns and "T" in df.columns:
                 # Transmission point
@@ -253,7 +253,7 @@ if experimental_data:
                     yaxis=dict(tickvals=[0, 1], ticktext=["No", "Yes"]),
                     height=300, **plot_defaults(),
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
             else:
                 st.dataframe(df, use_container_width=True)

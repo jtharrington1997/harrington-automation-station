@@ -84,7 +84,7 @@ with aw_panel():
         height=500,
         legend=dict(x=0.02, y=0.98),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 # ── Residuals ─────────────────────────────────────────────────────────────────
 if len(fit["z_data"]) > 0:
@@ -113,7 +113,7 @@ if len(fit["z_data"]) > 0:
             height=250,
             showlegend=False,
         )
-        st.plotly_chart(fig_res, use_container_width=True)
+        st.plotly_chart(fig_res, width="stretch")
 
 # ── Data Export ───────────────────────────────────────────────────────────────
 with aw_panel():
