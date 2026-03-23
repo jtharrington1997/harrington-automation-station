@@ -47,15 +47,27 @@ src/automation_station/
 └── cli.py                Command-line profiler interface
 ```
 
+## Installation
+
+```bash
+# Base install (includes numba + joblib)
+uv sync
+
+# With CUDA GPU (optional)
+pip install "automation-station[cuda]"
+
+# With hardware control (Windows/Linux with serial)
+pip install "automation-station[hardware]"
+```
+
+Note: `cupy-cuda12x` is optional — base install works on all platforms.
+
 ## Running
 
 ```bash
-source ~/harrington/activate.sh
+source ~/harrington/.venv/bin/activate
 cd ~/harrington/harrington-automation-station
 streamlit run app/streamlit_app.py
-
-# CLI mode
-profiler-cli --port COM3 --start 0 --stop 25 --step 0.1
 ```
 
 ## TODO
