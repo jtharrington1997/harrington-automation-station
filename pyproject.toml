@@ -20,11 +20,11 @@ dependencies = [
     "pandas>=2.0.0",
     "harrington-common",
     "numba>=0.64.0",
-    "cupy-cuda12x>=14.0.1",
     "joblib>=1.5.3",
 ]
 
 [project.optional-dependencies]
+cuda = ["cupy-cuda12x>=13.0.0"]
 hardware = [
     "pythonnet>=3.0.0",
     "pywin32>=306",
