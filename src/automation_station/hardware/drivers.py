@@ -221,3 +221,77 @@ class ThorlabsKDC101:
             pass
         self._device = None
         self.available = False
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NEWPORT NSC100  (delegates to newport-nsc100 package)
+# ══════════════════════════════════════════════════════════════════════════════
+class NewportNSC100:
+    """Newport NSC100 motion controller via the newport-nsc100 serial driver.
+
+    This is a thin wrapper that presents the same interface as the other
+    hardware classes (available flag, connect/disconnect/move_to/get_position)
+    while delegating actual serial communication to the standalone
+    newport_nsc100 package.
+    """
+
+    def __init__(self):
+        self.available = False
+        self._ctrl = None
+
+    def connect(self, port="COM4", axis=1, velocity=5.0, use_mock=False):
+        try:
+            if use_mock:
+                from newport_nsc100.mock import MockNSC100
+                self._ctrl = MockNSC100(port=port, axis=axis)
+            else:
+                from newport_nsc100 import NSC100
+                self._ctrl = NSC100(port=port, axis=axis)
+
+            result = self._ctrl.connect()
+            self._ctrl.velocity = velocity
+            self.available = True
+            return result
+        except Exception as e:
+            self.available = False
+            return f"Failed: {e}"
+
+    def get_position(self):
+        if not self.available or self._ctrl is None:
+            return 0.0
+        return self._ctrl.position
+
+    def move_to(self, position_mm, timeout=30.0):
+        if not self.available or self._ctrl is None:
+            return
+        self._ctrl.move_absolute(position_mm, timeout=timeout)
+
+    def move_relative(self, displacement_mm, timeout=30.0):
+        if not self.available or self._ctrl is None:
+            return
+        self._ctrl.move_relative(displacement_mm, timeout=timeout)
+
+    def home(self, timeout=60.0):
+        if not self.available or self._ctrl is None:
+            return
+        self._ctrl.home(timeout=timeout)
+
+    @property
+    def velocity(self):
+        if self._ctrl is None:
+            return 0.0
+        return self._ctrl.velocity
+
+    @velocity.setter
+    def velocity(self, value):
+        if self._ctrl is not None:
+            self._ctrl.velocity = value
+
+    def disconnect(self):
+        try:
+            if self._ctrl:
+                self._ctrl.disconnect()
+        except Exception:
+            pass
+        self._ctrl = None
+        self.available = False

@@ -29,6 +29,7 @@ hardware = [
     "pythonnet>=3.0.0",
     "pywin32>=306",
     "pyserial>=3.5",
+    "newport-nsc100",
 ]
 ai = [
     "anthropic>=0.40.0",
@@ -44,6 +45,7 @@ where = ["src"]
 
 [tool.uv.sources]
 harrington-common = { path = "../harrington-common", editable = true }
+newport-nsc100 = { path = "../Newport_NSC100_serial_com", editable = true }
 
 [dependency-groups]
 dev = ["pytest", "ruff"]
