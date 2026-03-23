@@ -1,85 +1,72 @@
-# Automation Station
+# harrington-automation-station
 
-Lab automation and beam-characterization platform built with Streamlit.
+Lab automation platform for knife-edge beam profiling, hardware-coordinated measurements, and experimental data analysis. Controls Newport SMC100/NSC100 motion stages, Thorlabs KDC101 actuators, and Ophir StarBright power meters with full digital twin simulation capability.
 
-Automation Station provides a structured interface for beam profiling, hardware control, data analysis, and comparison of experimental measurements against simulation outputs. It is intended for technical lab workflows ranging from guided acquisition to more automated measurement runs.
+**Port 8503** · Streamlit + harrington-common
 
-## Core capabilities
+## Modules
 
-- Automated and semi-automated beam characterization workflows
-- Hardware-assisted scan orchestration
-- Beam caustic analysis and parameter extraction
-- Result review and export
-- Gnuplot-oriented plotting workflow
-- Digital Twin comparison against model outputs
-- Shared Americana design system via `harrington-common`
+| Page | Function |
+|------|----------|
+| 1 — Full Auto | Fully automated beam profiling: configure scan parameters, run acquisition, analyze results |
+| 2 — Semi Auto | Manual stage control with automated data collection at each position |
+| 3 — Minimal | Bare-minimum interface for quick single-axis scans |
+| 4 — Results | Browse, compare, and export completed measurement datasets |
+| 5 — Settings | Hardware configuration, COM ports, scan defaults |
+| 6 — Gnuplot | Export measurement data to gnuplot-ready format with auto-generated scripts |
+| 7 — Digital Twin | Compare real measurements against simulated beam profiles |
+| 9 — Admin | API keys, system settings |
 
-## Supported workflow tiers
+## Hardware Drivers
 
-- Full automation
-- Semi-automated acquisition
-- Minimal/manual acquisition
-- Results and analysis review
-- Hardware and scan settings
-- Admin-only controls
-
-## Hardware integration
-
-Typical supported hardware includes:
-
-- Ophir StarBright
-- Newport SMC100
-- Thorlabs KDC101
-
-The exact hardware stack can be extended as the platform grows.
-
-## Repository layout
-
-Typical areas include:
-
-- `app/` for the Streamlit entrypoint and pages
-- `src/automation_station/` for analysis logic, hardware integration, I/O, and UI helpers
-- `data/cache/` for runtime artifacts
-- `data/results/` for measurement outputs
-
-## Installation
-
-This project uses `uv`.
-
-### Prerequisites
-
-- Python 3.10+
-- `uv`
-- local sibling checkout of `harrington-common`
-
-Expected layout:
-
-```text
-Projects/
-  harrington-common/
-  automation-station/
+```
+src/automation_station/hardware/
+├── drivers.py          Unified driver layer
+│   ├── OphirStarBright   Ophir power meter (COM/USB, win32com)
+│   ├── NewportSMC100     Newport SMC100 stage (.NET/pythonnet)
+│   ├── ThorlabsKDC101    Thorlabs KDC101 actuator (.NET/pythonnet)
+│   └── NewportNSC100     Newport NSC100 wrapper (delegates to nsc100/)
+└── nsc100/             Newport NSC100 serial driver (folded from standalone repo)
+    ├── __init__.py     Full RS-232 command set, state machine, property API
+    ├── mock.py         MockNSC100 for development without hardware
+    └── scan.py         Reusable linear scan orchestration
 ```
 
-### Install dependencies
+The NSC100 driver supports XON/XOFF flow control at 57600 baud, all documented controller states, blocking motion with timeout/error detection, and a context manager interface. MockNSC100 provides identical API for UI development.
+
+## Package Structure
+
+```
+src/automation_station/
+├── analysis/
+│   └── beam_profile.py   Knife-edge fitting, beam width extraction, M² estimation
+├── hardware/             All hardware drivers (see above)
+├── io/
+│   └── config.py         Scan configuration, COM port settings
+├── ui/                   Layout, branding, access control
+└── cli.py                Command-line profiler interface
+```
+
+## Running
 
 ```bash
-uv sync
+source ~/harrington/activate.sh
+cd ~/harrington/harrington-automation-station
+streamlit run app/streamlit_app.py
+
+# CLI mode
+profiler-cli --port COM3 --start 0 --stop 25 --step 0.1
 ```
 
-### Run the app
+## TODO
 
-```bash
-uv run streamlit run app/streamlit_app.py
-```
-
-## Development notes
-
-- Keep hardware-facing logic isolated from Streamlit page code
-- Preserve admin gating for protected controls
-- Prefer reproducible `uv` workflows over ad hoc environment setup
-- Use the shared theme layer rather than repo-local visual drift
-
-## Related repos
-
-- `harrington-common`
-- `harrington-lmi`
+- [ ] Add 2D beam profiling (X + Y knife-edge scans)
+- [ ] Build beam pointing stability monitor (continuous position tracking)
+- [ ] Add M² measurement workflow (multi-position caustic scan)
+- [ ] Integrate power meter reading directly into scan workflow
+- [ ] Add real-time plotting during scan acquisition
+- [ ] Build measurement report PDF via harrington-common reporting
+- [ ] Add hardware auto-discovery for COM ports
+- [ ] Add scan queue for batch measurements
+- [ ] Improve digital twin with measured vs simulated overlay
+- [ ] Add data export to HDF5 format for large datasets
