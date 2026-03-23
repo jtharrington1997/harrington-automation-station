@@ -44,8 +44,8 @@ profiler-cli = "automation_station.cli:main"
 where = ["src"]
 
 [tool.uv.sources]
-harrington-common = { path = "../harrington-common", editable = true }
-newport-nsc100 = { path = "../Newport_NSC100_serial_com", editable = true }
+harrington-common = { workspace = true }
+newport-nsc100 = { workspace = true }
 
 [dependency-groups]
 dev = ["pytest", "ruff"]
