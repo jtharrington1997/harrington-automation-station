@@ -242,10 +242,10 @@ class NewportNSC100:
     def connect(self, port="COM4", axis=1, velocity=5.0, use_mock=False):
         try:
             if use_mock:
-                from newport_nsc100.mock import MockNSC100
+                from automation_station.hardware.nsc100.mock import MockNSC100
                 self._ctrl = MockNSC100(port=port, axis=axis)
             else:
-                from newport_nsc100 import NSC100
+                from automation_station.hardware.nsc100 import NSC100
                 self._ctrl = NSC100(port=port, axis=axis)
 
             result = self._ctrl.connect()
