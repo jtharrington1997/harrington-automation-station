@@ -36,20 +36,32 @@ from scipy.optimize import curve_fit
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
-# ── pythonnet / Newport SMC100 (always needed) ───────────────────────────────
-import clr
-sys.path.append(
-    r"C:\Windows\Microsoft.NET\assembly\GAC_64"
-    r"\Newport.SMC100.CommandInterface"
-    r"\v4.0_2.0.0.3__d9d722840772240b"
-)
-clr.AddReference(
-    r"C:\Windows\Microsoft.NET\assembly\GAC_64"
-    r"\Newport.SMC100.CommandInterface"
-    r"\v4.0_2.0.0.3__d9d722840772240b"
-    r"\Newport.SMC100.CommandInterface.dll"
-)
-from CommandInterfaceSMC100 import SMC100
+# ── pythonnet / Newport SMC100 (Windows-only, guarded) ───────────────────────
+_HAS_SMC100 = False
+SMC100 = None
+if sys.platform == "win32":
+    try:
+        import clr
+        sys.path.append(
+            r"C:\Windows\Microsoft.NET\assembly\GAC_64"
+            r"\Newport.SMC100.CommandInterface"
+            r"\v4.0_2.0.0.3__d9d722840772240b"
+        )
+        clr.AddReference(
+            r"C:\Windows\Microsoft.NET\assembly\GAC_64"
+            r"\Newport.SMC100.CommandInterface"
+            r"\v4.0_2.0.0.3__d9d722840772240b"
+            r"\Newport.SMC100.CommandInterface.dll"
+        )
+        from CommandInterfaceSMC100 import SMC100 as _SMC100
+        SMC100 = _SMC100
+        _HAS_SMC100 = True
+    except (ImportError, OSError):
+        pass
+
+if not _HAS_SMC100:
+    import logging as _log
+    _log.getLogger(__name__).debug("SMC100 .NET driver unavailable — CLI hardware commands disabled")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # USER SETTINGS
