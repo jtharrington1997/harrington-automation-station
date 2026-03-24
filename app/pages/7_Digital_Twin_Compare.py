@@ -16,7 +16,7 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 from automation_station.ui.layout import render_header
-from harrington_common.theme import aw_panel
+from harrington_common.theme import aw_panel, plotly_layout
 
 st.set_page_config(page_title="Digital Twin Compare", layout="wide")
 render_header()
@@ -24,17 +24,9 @@ render_header()
 RESULTS_DIR = Path("data/results")
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-PLOT_TEMPLATE = "plotly_dark"
-PLOT_BG = "#0D1117"
-PLOT_PAPER = "#161B22"
-
 
 def plot_defaults() -> dict:
-    return dict(
-        template=PLOT_TEMPLATE,
-        paper_bgcolor=PLOT_PAPER,
-        plot_bgcolor=PLOT_BG,
-    )
+    return plotly_layout()
 
 
 # ── Sidebar ───────────────────────────────────────────────────────
