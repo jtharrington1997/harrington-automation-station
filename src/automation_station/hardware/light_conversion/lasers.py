@@ -330,3 +330,166 @@ class LCOrpheus(LaserController):
             "tuning_range_nm": self.tuning_range_nm,
             "pump_connected": self._pump.available if self._pump else False,
         }
+
+
+class CoherentOpera(LaserController):
+    """Coherent Opera OPA controller.
+
+    Paired with a Coherent Astrella Ti:Sapphire amplifier as pump.
+    Tunable across UV–MIR via signal, idler, and nonlinear mixing
+    stages (DFG, SFG, SHG of signal/idler).
+
+    Typical tuning range: 240 nm – 20 µm depending on installed
+    mixing modules. Uses serial RS-232 communication.
+
+    Parameters
+    ----------
+    port : Serial port for Opera control.
+    pump : Associated Coherent Astrella instance (optional).
+    """
+
+    def __init__(self, port: str = "COM10", pump: "CoherentAstrella | None" = None,
+                 baudrate: int = 19200, mock: bool = False):
+        super().__init__(mock=mock)
+        self._port = port
+        self._pump = pump
+        self._baudrate = baudrate
+        self._sock = None
+        self._ser = None
+        self._emitting = False
+        self._wavelength = 800.0
+        self._output = "signal"
+        self._modules = ["signal", "idler", "SHG-S", "SHG-I", "SFG", "DFG"]
+
+    def connect(self, **kwargs) -> str:
+        if self._mock:
+            self._set_connected(InstrumentInfo(
+                "Coherent", "Opera-F/Solo",
+                description="Mock — tunable OPA, Astrella-pumped"
+            ))
+            return "Connected (mock)"
+        try:
+            import serial as _serial
+            self._ser = _serial.Serial(self._port, self._baudrate, timeout=2.0)
+            self._ser.reset_input_buffer()
+            info = self.identify()
+            self._set_connected(info)
+            return f"Connected: {info.model}"
+        except Exception as e:
+            self._set_error(str(e))
+            return f"Failed: {e}"
+
+    def disconnect(self) -> None:
+        if self._ser:
+            try:
+                self._ser.close()
+            except Exception:
+                pass
+        self._ser = None
+        self._set_disconnected()
+
+    def identify(self) -> InstrumentInfo:
+        if self._mock:
+            return InstrumentInfo("Coherent", "Opera-F/Solo", "MOCK-OPERA",
+                                  description="OPA pumped by Astrella, 240 nm – 20 µm")
+        resp = self._query("*IDN?")
+        return InstrumentInfo(vendor="Coherent", model="Opera", firmware=resp)
+
+    def _send(self, cmd: str) -> None:
+        if self._mock or self._ser is None:
+            return
+        self._ser.write(f"{cmd}\r\n".encode("ascii"))
+        self._ser.flush()
+
+    def _query(self, cmd: str) -> str:
+        if self._mock:
+            return "Mock"
+        self._send(cmd)
+        return self._ser.readline().decode("ascii", errors="replace").strip()
+
+    def set_emission(self, on: bool) -> None:
+        self._emitting = on
+        if not self._mock:
+            self._send(f"SHUTTER {'OPEN' if on else 'CLOSE'}")
+
+    @property
+    def is_emitting(self) -> bool:
+        return self._emitting
+
+    @property
+    def wavelength_nm(self) -> float:
+        return self._wavelength
+
+    @wavelength_nm.setter
+    def wavelength_nm(self, value: float) -> None:
+        """Tune OPA to target wavelength.
+
+        The Opera automatically selects the appropriate output stage
+        (signal, idler, SHG, SFG, DFG) based on the requested wavelength.
+        """
+        self._wavelength = value
+        # Determine output stage
+        if 1140 <= value <= 1600:
+            self._output = "signal"
+        elif 1600 < value <= 2600:
+            self._output = "idler"
+        elif 570 <= value < 800:
+            self._output = "SHG-S"
+        elif 800 <= value < 1140:
+            self._output = "SHG-I"
+        elif 240 <= value < 570:
+            self._output = "SFG"
+        elif value > 2600:
+            self._output = "DFG"
+        else:
+            self._output = "signal"
+
+        if not self._mock:
+            self._send(f"WAVELENGTH {value:.1f}")
+            import time
+            time.sleep(3.0)  # OPA tuning + crystal rotation
+
+    @property
+    def output_type(self) -> str:
+        """Current output stage."""
+        return self._output
+
+    @property
+    def available_modules(self) -> list[str]:
+        """Installed mixing modules."""
+        return list(self._modules)
+
+    @property
+    def tuning_range_nm(self) -> tuple[float, float]:
+        """Full tuning range across all modules."""
+        return (240.0, 20000.0)
+
+    @property
+    def signal_range_nm(self) -> tuple[float, float]:
+        return (1140.0, 1600.0)
+
+    @property
+    def idler_range_nm(self) -> tuple[float, float]:
+        return (1600.0, 2600.0)
+
+    @property
+    def pump_wavelength_nm(self) -> float:
+        """Astrella pump wavelength (fixed at 800 nm)."""
+        return 800.0
+
+    @property
+    def pump_status(self) -> dict | None:
+        if self._pump:
+            return self._pump.get_status()
+        return None
+
+    def get_status(self) -> dict:
+        return {
+            "emitting": self._emitting,
+            "wavelength_nm": self._wavelength,
+            "output": self._output,
+            "tuning_range_nm": self.tuning_range_nm,
+            "modules": self._modules,
+            "pump_connected": self._pump.available if self._pump else False,
+            "pump_wavelength_nm": self.pump_wavelength_nm,
+        }

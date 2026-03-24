@@ -382,6 +382,13 @@ def _register_builtin_drivers():
         default_baud=19200,
         description="Astrella one-box Ti:Sapphire amplifier (serial RS-232)",
     ))
+    register_driver("coherent_opera", DeviceEntry(
+        driver_class=Instrument,
+        vendor="Coherent", model="Opera-F/Solo",
+        category="laser", protocol="serial",
+        default_baud=19200,
+        description="Opera OPA (pumped by Astrella Ti:Sapphire, 240 nm – 20 µm)",
+    ))
     register_driver("coherent_chameleon", DeviceEntry(
         driver_class=Instrument,
         vendor="Coherent", model="Chameleon",
