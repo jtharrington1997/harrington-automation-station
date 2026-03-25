@@ -38,3 +38,15 @@ data/results/
 
 # Jupyter
 .ipynb_checkpoints/
+data/raw/
+data/experimental/
+data/*.zip
+**/__pycache__/
+
+# Shared local-data/cache ignores
+data/raw/
+data/experimental/
+data/cache/
+data/*.zip
+**/__pycache__/
+__pycache__
