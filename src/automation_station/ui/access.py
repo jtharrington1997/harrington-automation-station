@@ -17,8 +17,8 @@ import streamlit as st
 
 _ACCESS_FILE = Path("data/manual/access.json")
 
-# Default password: "REDACTED_DEFAULT_PASSWORD" — change on first run
-_DEFAULT_HASH = hashlib.sha256("REDACTED_DEFAULT_PASSWORD".encode()).hexdigest()
+# Default password is "changeme" — change on first run via Admin page
+_DEFAULT_HASH = hashlib.sha256("changeme".encode()).hexdigest()
 
 
 def _load_access() -> dict:
